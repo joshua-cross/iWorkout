@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.josh.iworkout.MainActivity"
-    android:background="@drawable/workoutvert"
+    android:background="@drawable/workoutland"
     >
 
     <include
@@ -21,8 +21,8 @@
         android:id="@+id/Monday"
         android:layout_width="25dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="380dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tickDates"
         app:layout_constraintVertical_chainStyle="spread" />
@@ -31,8 +31,8 @@
         android:id="@+id/Tuesday"
         android:layout_width="25dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="380dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Monday" />
 
@@ -40,8 +40,8 @@
         android:id="@+id/Wednesday"
         android:layout_width="25dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="380dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Tuesday" />
 
@@ -49,7 +49,7 @@
         android:id="@+id/Thursday"
         android:layout_width="25dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="380dp"
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Wednesday" />
@@ -58,17 +58,17 @@
         android:id="@+id/Saturday"
         android:layout_width="25dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Friday" />
+        app:layout_constraintTop_toBottomOf="@+id/tickDates" />
 
     <CheckBox
         android:id="@+id/Friday"
         android:layout_width="25dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="380dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Thursday" />
 
@@ -76,8 +76,8 @@
         android:id="@+id/Sunday"
         android:layout_width="25dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Saturday" />
 
@@ -100,13 +100,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="24dp"
         android:text="Monday"
-        android:textSize="16dp"
         android:textColor="@color/mainText"
+        android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@+id/Monday"
-        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintHorizontal_bias="0.073"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tickDates" />
 
@@ -115,13 +115,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="28dp"
         android:text="Tuesday"
-        android:textSize="16dp"
         android:textColor="@color/mainText"
+        android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@+id/Tuesday"
-        app:layout_constraintHorizontal_bias="0.121"
+        app:layout_constraintHorizontal_bias="0.074"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/day1" />
 
@@ -130,13 +130,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="200dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="28dp"
         android:text="Wednesday"
         android:textColor="@color/mainText"
         android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@+id/Wednesday"
-        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/day2" />
 
@@ -145,22 +145,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="28dp"
         android:text="Thursday"
-        android:textSize="16dp"
         android:textColor="@color/mainText"
+        android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@+id/Thursday"
-        app:layout_constraintHorizontal_bias="0.131"
+        app:layout_constraintHorizontal_bias="0.076"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/day3" />
+
+    <TextView
+        android:id="@+id/day6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="24dp"
+        android:text="Saturday"
+        android:textColor="@color/mainText"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/Saturday"
+        app:layout_constraintHorizontal_bias="0.321"
+        app:layout_constraintStart_toEndOf="@+id/Monday"
+        app:layout_constraintTop_toBottomOf="@+id/tickDates" />
 
     <TextView
         android:id="@+id/day5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="200dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="28dp"
         android:text="Friday"
         android:textColor="@color/mainText"
@@ -171,41 +186,26 @@
         app:layout_constraintTop_toBottomOf="@+id/day4" />
 
     <TextView
-        android:id="@+id/day6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:text="Saturday"
-        android:textColor="@color/mainText"
-        android:textSize="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/Saturday"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/day5" />
-
-    <TextView
         android:id="@+id/day7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="24dp"
         android:text="Sunday"
         android:textColor="@color/mainText"
         android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@+id/Sunday"
-        app:layout_constraintHorizontal_bias="0.049"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.312"
+        app:layout_constraintStart_toEndOf="@+id/Tuesday"
         app:layout_constraintTop_toBottomOf="@+id/day6" />
 
     <Button
         android:id="@+id/confirm"
         android:layout_width="88dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="28dp"
         android:text="Confirm"
         android:background="@color/green"
         android:textColor="@color/white"

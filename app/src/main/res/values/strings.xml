@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">iWorkout</string>
+    <!--Names for the drop down menu items. -->
+    <string name="menu1">dates</string>
 </resources>
