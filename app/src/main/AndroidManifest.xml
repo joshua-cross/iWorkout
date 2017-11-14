@@ -20,6 +20,10 @@
         <service
             android:name=".Dates"
             android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Workouts"
+            android:enabled="true"
             android:exported="true"></service>
     </application>
 
