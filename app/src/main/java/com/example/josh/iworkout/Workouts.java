@@ -57,6 +57,8 @@ public class Workouts extends Service {
                 String sExcercises = workouts.get(i) + "Excercises";
                 String sWeights = workouts.get(i) + "Weights";
                 String sBodyWeight = workouts.get(i) + "BodyWeight";
+                System.out.println(sExcercises + " " + sWeights + " " + sBodyWeight);
+                System.out.println("Workout: " + workouts.get(i));
                 //if the excercises DB exists then we will add it to the arraylist of arraylists for excercises.
                 if(tinyDB.getListString(sExcercises).size() != 0) {
                     excercises.add(tinyDB.getListString(sExcercises));
@@ -71,6 +73,8 @@ public class Workouts extends Service {
                     isBodyWeight.add(tinyDB.getListBoolean(sBodyWeight));
                 }
             }
+
+            System.out.println(excercises);
         }
 
         //tinyDB.putListBoolean();
@@ -81,11 +85,17 @@ public class Workouts extends Service {
         currWorkout = workoutName;
     }
 
+    //method to check name of current workout.
+    public void checkWorkout() {
+        System.out.println(currWorkout);
+    }
+
     //adding excercises to the specific workout using dynamic tinyDBs.
     public void addExcercise(String excerciseName) {
 
         //String for the current workouts excercies so we can save it to a dynamic tinyDB.
         String workout = currWorkout + "Excercises";
+        System.out.println(workout);
 
         //adding to the currentExcercises.
         currExcercises.add(excerciseName);
@@ -104,6 +114,7 @@ public class Workouts extends Service {
 
         //String for the current workouts excercies so we can save it to a dynamic tinyDB.
         String workout = currWorkout + "BodyWeight";
+        System.out.println(workout);
 
         //adding to the isBodyWeight array.
         currIsBodyWeight.add(weighted);
@@ -119,6 +130,7 @@ public class Workouts extends Service {
     public void addWeight(int uWeight) {
         //String for the current workouts excercies so we can save it to a dynamic tinyDB.
         String workout = currWorkout + "Weight";
+        System.out.println(workout);
 
         //adding to the isBodyWeight array.
         currWeights.add(uWeight);
