@@ -40,6 +40,8 @@ public class Workouts extends Service {
     //arraylist for the weights of the excercieses in the workouts which is being created by the yusers.
     ArrayList<Integer> currWeights = new ArrayList<>();
 
+    //the workout which was selected in the ViewWorkouts activity.
+    String selectedWorkout;
 
     @Override
     public void onCreate() {
@@ -180,7 +182,15 @@ public class Workouts extends Service {
         return isBodyWeight;
     }
 
+    //setter for the selectedWorkout
+    public void setWorkouts(String sWorkout) {
+        selectedWorkout = sWorkout;
+    }
 
+    //getter for the selected workout.
+    public String getSelectedWorkout() {
+        return selectedWorkout;
+    }
 
 
     @Override

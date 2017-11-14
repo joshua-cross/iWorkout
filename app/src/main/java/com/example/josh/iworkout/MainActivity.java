@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
         String menu1 = getResources().getString(R.string.menu1);
         String menu2 = getResources().getString(R.string.menu2);
-        //String menu3 = getResources().getString(R.string.menuText3);
+        String menu3 = getResources().getString(R.string.menu3);
         //String menu4 = getResources().getString(R.string.menuText4);
         //String menu5 = getResources().getString(R.string.menuText5);
 
@@ -167,11 +167,13 @@ public class MainActivity extends AppCompatActivity {
             Intent addWorkout = new Intent (this, AddWorkout.class);
             startActivity(addWorkout);
         }
-        /*
+
         else if(item.toString().equals(menu3)) {
-            Intent editPage = new Intent (this, ChartYearlyPreview.class);
+            Intent editPage = new Intent (this, ViewWorkouts.class);
             startActivity(editPage);
-        } else if(item.toString().equals(menu4)) {
+        }
+        /*
+        else if(item.toString().equals(menu4)) {
             Intent editPage = new Intent (this, Edit.class);
             startActivity(editPage);
         } else if(item.toString().equals(menu5)) {
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(editPage);
         }
         */
+
 
         return super.onOptionsItemSelected(item);
     }
