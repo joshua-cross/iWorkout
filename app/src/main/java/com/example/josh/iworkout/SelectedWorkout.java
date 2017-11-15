@@ -1,5 +1,7 @@
 package com.example.josh.iworkout;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ComponentName;
@@ -28,6 +30,7 @@ import android.widget.RelativeLayout.LayoutParams;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SelectedWorkout extends AppCompatActivity {
@@ -43,6 +46,9 @@ public class SelectedWorkout extends AppCompatActivity {
     ArrayList<TextView> excerciseArray = new ArrayList<>();
 
     ArrayList<Button> startArray = new ArrayList<>();
+
+    //an array for linear layouts for everything we wish to add to the excercise.
+    ArrayList<LinearLayout> layouts = new ArrayList<>();
 
     //the overlay which will be displayed when the user presses a button.
     ConstraintLayout overlay;
@@ -62,6 +68,7 @@ public class SelectedWorkout extends AppCompatActivity {
     TextView time;
     TextView currentExcercise;
     TextView txt;
+    TextView counter;
     Button nextSet;
     Button finished;
 
@@ -122,12 +129,23 @@ public class SelectedWorkout extends AppCompatActivity {
 
         for(int i = 0; i < excercises.get(id).size(); i = i + 1) {
 
+            LinearLayout tempLayout = new LinearLayout(this);
+            tempLayout.setBackgroundColor(getResources().getColor(R.color.white));
+            LayoutParams layoutParams = new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.bottomMargin = 30;
+            layoutParams.leftMargin = 10;
+            layoutParams.rightMargin = 10;
+            tempLayout.setLayoutParams(layoutParams);
+            layout.addView(tempLayout);
+
+            layouts.add(tempLayout);
+
             TextView tv = new TextView(this);
             tv.setText(excercises.get(id).get(i));
             //tv.setText("chuck");
             tv.setTextSize(18.0f);
             tv.setTextColor(getResources().getColor(R.color.mainText));
-            tv.setBackgroundColor(getResources().getColor(R.color.white));
+            //tv.setBackgroundColor(getResources().getColor(R.color.white));
             tv.setPadding(20, 30, 5, 10);
             tv.setId(i);
 
@@ -136,7 +154,7 @@ public class SelectedWorkout extends AppCompatActivity {
             LayoutParams params = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             //start.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             //params.addRule(LinearLayout.ALIGN_PARENT_RIGHT);
-            params.leftMargin = 700;
+            //params.leftMargin = 700;
             params.topMargin = 10;
             params.bottomMargin = 30;
             start.setLayoutParams(params);
@@ -152,8 +170,8 @@ public class SelectedWorkout extends AppCompatActivity {
             excerciseArray.add(tv);
             startArray.add(start);
 
-            layout.addView(excerciseArray.get(i));
-            layout.addView(startArray.get(i));
+            tempLayout.addView(excerciseArray.get(i));
+            tempLayout.addView(startArray.get(i));
 
         }
 
@@ -162,8 +180,10 @@ public class SelectedWorkout extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
+                    setCounter = 0;
+
                     System.out.println(startArray.get(view.getId()));
-                    mServer.setWorkouts(view.getId());
+                    //mServer.setWorkouts(view.getId());
 
 
                     //overlay.setVisibility(View.VISIBLE);
@@ -177,22 +197,34 @@ public class SelectedWorkout extends AppCompatActivity {
                     //startActivity(intent);
 
                     // TODO Auto-generated method stub
+                    //getting all the elements from the dialog.xml file.
                     custom = new Dialog(SelectedWorkout.this);
                     custom.setContentView(R.layout.dialog);
                     time = (TextView) custom.findViewById(R.id.textView);
                     currentExcercise = (TextView)custom.findViewById(R.id.currentExcercise);
                     nextSet = (Button)custom.findViewById(R.id.NextSet);
                     finished = (Button)custom.findViewById(R.id.Finished);
-                    custom.setTitle("Custom Dialog");
+                    counter = (TextView)custom.findViewById(R.id.CurrentSet);
+
+                    //setting the current excercise to be the excercise that we have chosen.
+                    currentExcercise.setText(excercises.get(mServer.getSelectedWorkoutID()).get(selectedExcercise) + "test");
+
+                    //setting the counter to be 0 originally.
+                    counter.setText("Current set: " + setCounter);
+
+                    custom.setTitle("Excersise");
+
+                    //when the nextset button has been pressed.
                     nextSet.setOnClickListener(new View.OnClickListener() {
-
-
                         @Override
                         public void onClick(View view) {
                             setCounter = setCounter + 1;
+                            counter.setText("Current set: " + setCounter);
                         }
 
                     });
+
+                    //when the finished button is pressed.
                     finished.setOnClickListener(new View.OnClickListener() {
 
                         @Override
@@ -200,8 +232,8 @@ public class SelectedWorkout extends AppCompatActivity {
                             int id = mServer.getSelectedWorkoutID();
 
                             //the value of the selectedExcercise text before the finished button has been pressed.
-                            String excerciseValue = excerciseArray.get(selectedExcercise).toString();
-                            excerciseValue += ", " + setCounter + " sets have been completed.";
+                            String excerciseValue = excercises.get(id).get(selectedExcercise).toString();
+                            excerciseValue += "\n" + setCounter + " sets have been completed.";
 
                             excerciseArray.get(selectedExcercise).setText(excerciseValue);
 
@@ -209,6 +241,24 @@ public class SelectedWorkout extends AppCompatActivity {
 
                             excerciseArray.get(selectedExcercise);
                             // TODO Auto-generated method stub
+
+
+                            //changing the color from white to green using the value animator to inform the user that they have finished a certain excersise.
+                            ValueAnimator anim = new ValueAnimator();
+                            anim.setIntValues(getResources().getColor(R.color.white), getResources().getColor(R.color.green));
+                            anim.setEvaluator(new ArgbEvaluator());
+                            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                    layouts.get(selectedExcercise).setBackgroundColor((Integer)valueAnimator.getAnimatedValue());
+                                }
+                            });
+
+                            anim.setDuration(1000);
+                            anim.start();
+
+                            startArray.get(selectedExcercise).setVisibility(View.INVISIBLE);
+
                             custom.dismiss();
 
                         }

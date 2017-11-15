@@ -8,6 +8,8 @@
     android:padding="10dp"
     >
 
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,19 +20,32 @@
         android:text="Excercise name"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:paddingBottom="60dp"
         android:paddingTop="20dp">
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/CurrentSet"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:textAlignment="center"
+        android:text="Current Set: "
+        android:layout_below="@id/currentExcercise"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
     </TextView>
 
     <TextView
         android:id="@+id/Time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/currentExcercise"
+        android:layout_below="@+id/CurrentSet"
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:hint="First Name"
-        android:paddingTop="30dp"
+        android:paddingTop="10dp"
         android:text="Elapsed Time"
         android:textAlignment="center"
         android:textColor="@color/white"

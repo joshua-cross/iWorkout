@@ -194,6 +194,7 @@ public class Workouts extends Service {
 
     //getter for the selecred workout id.
     public int getSelectedWorkoutID() {
+        System.out.println("SelectedWorkoutID: " + selectedWorkout);
         return selectedWorkout;
     }
 
