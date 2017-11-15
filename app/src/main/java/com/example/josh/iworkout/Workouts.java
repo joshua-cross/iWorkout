@@ -41,7 +41,7 @@ public class Workouts extends Service {
     ArrayList<Integer> currWeights = new ArrayList<>();
 
     //the workout which was selected in the ViewWorkouts activity.
-    String selectedWorkout;
+    int selectedWorkout = 0;
 
     @Override
     public void onCreate() {
@@ -183,14 +183,20 @@ public class Workouts extends Service {
     }
 
     //setter for the selectedWorkout
-    public void setWorkouts(String sWorkout) {
-        selectedWorkout = sWorkout;
+    public void setWorkouts(int workoutID) {
+        selectedWorkout = workoutID;
     }
 
     //getter for the selected workout.
     public String getSelectedWorkout() {
+        return workouts.get(selectedWorkout);
+    }
+
+    //getter for the selecred workout id.
+    public int getSelectedWorkoutID() {
         return selectedWorkout;
     }
+
 
 
     @Override
