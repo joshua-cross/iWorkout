@@ -1,11 +1,16 @@
 package com.example.josh.iworkout;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +44,26 @@ public class SelectedWorkout extends AppCompatActivity {
 
     ArrayList<Button> startArray = new ArrayList<>();
 
+    //the overlay which will be displayed when the user presses a button.
+    ConstraintLayout overlay;
 
+    //the ID of the selected excercise.
+    int selectedExcercise = 0;
 
+    //the Finished and the next set buttons
+    //Button nextSet;
+    //Button finished;
+
+    //a counter for how many sets have been selected.
+    int setCounter = 0;
+
+    Button cust;
+    Dialog custom;
+    TextView time;
+    TextView currentExcercise;
+    TextView txt;
+    Button nextSet;
+    Button finished;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +75,40 @@ public class SelectedWorkout extends AppCompatActivity {
         app_bar.setDisplayShowTitleEnabled(false);
 
         workout = (TextView) findViewById(R.id.WorkoutName);
+
+        //overlay = (ConstraintLayout) findViewById(R.id.overlay);
+
+
+
+        //when the finished button has been pressed.
     }
+
+    /*
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        //mSelectedItems = new ArrayList();  // Where we track the selected items
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Set the dialog title
+        builder.setTitle("Test")
+                // Set the action buttons
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+        return builder.create();
+    }
+    */
 
     public void draw() {
 
@@ -60,7 +117,7 @@ public class SelectedWorkout extends AppCompatActivity {
 
         //ArrayList<ArrayList<String>> excercises = new ArrayList<>();
         //excercises = mServer.getExcercises();
-        LinearLayout layout = (LinearLayout) findViewById(R.id.excerciseLayout);
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.excerciseLayout);
 
 
         for(int i = 0; i < excercises.get(id).size(); i = i + 1) {
@@ -108,9 +165,56 @@ public class SelectedWorkout extends AppCompatActivity {
                     System.out.println(startArray.get(view.getId()));
                     mServer.setWorkouts(view.getId());
 
+
+                    //overlay.setVisibility(View.VISIBLE);
+                    //layout.setVisibility(View.INVISIBLE);
+
+                    selectedExcercise = view.getId();
+
+                    //setting the text for the previous action.
                     //going to another activity.
                     //Intent intent = new Intent(ViewWorkouts.this, SelectedWorkout.class);
                     //startActivity(intent);
+
+                    // TODO Auto-generated method stub
+                    custom = new Dialog(SelectedWorkout.this);
+                    custom.setContentView(R.layout.dialog);
+                    time = (TextView) custom.findViewById(R.id.textView);
+                    currentExcercise = (TextView)custom.findViewById(R.id.currentExcercise);
+                    nextSet = (Button)custom.findViewById(R.id.NextSet);
+                    finished = (Button)custom.findViewById(R.id.Finished);
+                    custom.setTitle("Custom Dialog");
+                    nextSet.setOnClickListener(new View.OnClickListener() {
+
+
+                        @Override
+                        public void onClick(View view) {
+                            setCounter = setCounter + 1;
+                        }
+
+                    });
+                    finished.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            int id = mServer.getSelectedWorkoutID();
+
+                            //the value of the selectedExcercise text before the finished button has been pressed.
+                            String excerciseValue = excerciseArray.get(selectedExcercise).toString();
+                            excerciseValue += ", " + setCounter + " sets have been completed.";
+
+                            excerciseArray.get(selectedExcercise).setText(excerciseValue);
+
+                            //adding the number of sets to the end of this.
+
+                            excerciseArray.get(selectedExcercise);
+                            // TODO Auto-generated method stub
+                            custom.dismiss();
+
+                        }
+                    });
+                    custom.show();
+
 
                 }
             });

@@ -9,53 +9,6 @@
 
 
     <!--Overlay which will show the user how long they have been doing an excercies, and allows users to start the next excercise after they have finished. -->
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/darkGreen"
-        android:visibility="invisible"
-        tools:layout_editor_absoluteX="195dp"
-        tools:layout_editor_absoluteY="331dp">
-
-        <Button
-            android:id="@+id/NextSet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="112dp"
-            android:text="Next Set"
-            android:background="@color/green"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ElapsedTime" />
-
-        <Button
-            android:id="@+id/FinishedExcercise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="112dp"
-            android:background="@color/green"
-            android:text="Finished"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ElapsedTime" />
-
-
-        <TextView
-            android:id="@+id/ElapsedTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="148dp"
-            android:text="Elapsed Time: "
-            android:textColor="@color/white"
-            android:textSize="28dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
 
     <include
         android:id="@+id/action_bar"

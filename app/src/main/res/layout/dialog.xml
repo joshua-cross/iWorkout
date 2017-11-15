@@ -1,0 +1,65 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/darkGreen"
+    android:padding="10dp"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currentExcercise"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:textAlignment="center"
+        android:text="Excercise name"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="60dp"
+        android:paddingTop="20dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/currentExcercise"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="First Name"
+        android:paddingTop="30dp"
+        android:text="Elapsed Time"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:paddingBottom="10dp">
+
+    </TextView>
+
+
+
+    <Button
+        android:id="@+id/NextSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Finished"
+        android:layout_alignBottom="@+id/Finished"
+        android:layout_alignRight="@+id/Time"
+        android:background="@color/green"
+        android:textColor="@color/white"
+        android:text="Next Set" />
+
+    <Button
+        android:id="@+id/Finished"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Time"
+        android:layout_below="@+id/Time"
+        android:background="@color/green"
+        android:textColor="@color/white"
+        android:text="Finished" />
+
+</RelativeLayout>
