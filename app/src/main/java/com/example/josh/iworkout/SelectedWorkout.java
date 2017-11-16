@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
@@ -32,6 +33,8 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class SelectedWorkout extends AppCompatActivity {
 
@@ -72,6 +75,14 @@ public class SelectedWorkout extends AppCompatActivity {
     Button nextSet;
     Button finished;
 
+    //the amount of minutes the user is performing an excercise.
+    int minutes = 0;
+    //the amount of seconds the user is performing an excercise.
+    int seconds = 0;
+
+    //boolean that checks if the user is in a dialog.
+    boolean isWorkingOut = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +93,9 @@ public class SelectedWorkout extends AppCompatActivity {
         app_bar.setDisplayShowTitleEnabled(false);
 
         workout = (TextView) findViewById(R.id.WorkoutName);
+
+        //starting the counter, however this will only be ran when an excersise is chosen
+        secondCounter();
 
         //overlay = (ConstraintLayout) findViewById(R.id.overlay);
 
@@ -135,6 +149,7 @@ public class SelectedWorkout extends AppCompatActivity {
             layoutParams.bottomMargin = 30;
             layoutParams.leftMargin = 10;
             layoutParams.rightMargin = 10;
+            tempLayout.setOrientation(LinearLayout.VERTICAL);
             tempLayout.setLayoutParams(layoutParams);
             layout.addView(tempLayout);
 
@@ -186,6 +201,9 @@ public class SelectedWorkout extends AppCompatActivity {
                     //mServer.setWorkouts(view.getId());
 
 
+                    //the user has clicked on an excercise therefore we can assume that they have started.
+                    isWorkingOut = true;
+
                     //overlay.setVisibility(View.VISIBLE);
                     //layout.setVisibility(View.INVISIBLE);
 
@@ -200,7 +218,7 @@ public class SelectedWorkout extends AppCompatActivity {
                     //getting all the elements from the dialog.xml file.
                     custom = new Dialog(SelectedWorkout.this);
                     custom.setContentView(R.layout.dialog);
-                    time = (TextView) custom.findViewById(R.id.textView);
+                    time = (TextView) custom.findViewById(R.id.Time);
                     currentExcercise = (TextView)custom.findViewById(R.id.currentExcercise);
                     nextSet = (Button)custom.findViewById(R.id.NextSet);
                     finished = (Button)custom.findViewById(R.id.Finished);
@@ -214,12 +232,26 @@ public class SelectedWorkout extends AppCompatActivity {
 
                     custom.setTitle("Excersise");
 
+                    //setting the time to be the minutes and seconds variables.
+                    time.setText("Elapsed time: " + minutes + ":" + seconds);
+
                     //when the nextset button has been pressed.
                     nextSet.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
+                            //string that displays the duration of the previous excercise.
+                            String temp = "set " + setCounter + " time was: " + minutes + ":" + seconds;
+
+                            //adding the minutes and seconds to the layout so the user can see them after they have finished the escercise.
+                            addText(temp, selectedExcercise);
+
                             setCounter = setCounter + 1;
                             counter.setText("Current set: " + setCounter);
+
+                            //resetting the minutes and seconds.
+                            seconds = 0;
+                            minutes = 0;
                         }
 
                     });
@@ -259,6 +291,12 @@ public class SelectedWorkout extends AppCompatActivity {
 
                             startArray.get(selectedExcercise).setVisibility(View.INVISIBLE);
 
+                            //when the finished button is pressed this means the user has finished the specific excercise.
+                            isWorkingOut = false;
+
+                            //going to add the times to the layout.
+
+
                             custom.dismiss();
 
                         }
@@ -271,6 +309,65 @@ public class SelectedWorkout extends AppCompatActivity {
         }
 
     }
+
+    //a method that adds a string to a specific layout
+    public void addText(String textToAdd, int layoutID) {
+        TextView tv = new TextView(this);
+        //setting the text for this text view to be what was inputted to the method.
+        tv.setText(textToAdd);
+        tv.setTextSize(18.0f);
+        tv.setTextColor(getResources().getColor(R.color.mainText));
+        //tv.setBackgroundColor(getResources().getColor(R.color.white));
+        tv.setPadding(20, 30, 5, 10);
+
+        //getting the layout from the ID given and adding the textview to this.
+        layouts.get(layoutID).addView(tv);
+    }
+
+    //timer for every second so we can see if it's past sleep time.
+    public void secondCounter()
+    {
+
+        //int millis = ((hours*60)+mins)*60000; // Need milliseconds to use Timer
+        int millis = 1000;
+
+
+        //Had to use handler instead of Java timer as this did not allow for the GUI to be updated.
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if(isWorkingOut) {
+                    seconds = seconds + 1;
+                    //if the time is set.
+                    if(time != null) {
+                        time.setText("Elapsed time: " + minutes + ":" + seconds);
+                    }
+
+                    //if we have reacher over 60 seconds then we are going to add a 1 to the minutes and reset the seconds variavle
+                    if(seconds > 60) {
+                        minutes = minutes + 1;
+                        seconds = 0;
+                    }
+                }
+
+                //resetting the timer.
+                resetTimer();
+
+            }
+
+        }, millis);
+    }
+
+    //resetting the timer.
+    public void resetTimer() {
+        secondCounter();
+    }
+
+
+
 
 
     @Override
