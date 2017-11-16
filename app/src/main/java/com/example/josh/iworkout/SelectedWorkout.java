@@ -3,17 +3,14 @@ package com.example.josh.iworkout;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -29,12 +26,7 @@ import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class SelectedWorkout extends AppCompatActivity {
 
@@ -46,7 +38,11 @@ public class SelectedWorkout extends AppCompatActivity {
     TextView workout;
     ArrayList<ArrayList<String>> excercises = new ArrayList<>();
 
+
     ArrayList<TextView> excerciseArray = new ArrayList<>();
+
+    //an array for all the weight text views.
+    ArrayList<TextView> weightArray = new ArrayList<>();
 
     ArrayList<Button> startArray = new ArrayList<>();
 
@@ -74,6 +70,11 @@ public class SelectedWorkout extends AppCompatActivity {
     TextView counter;
     Button nextSet;
     Button finished;
+    Button start;
+    EditText newWeight;
+    EditText newReps;
+    TextView repsText;
+    TextView weightText;
 
     //the amount of minutes the user is performing an excercise.
     int minutes = 0;
@@ -82,6 +83,8 @@ public class SelectedWorkout extends AppCompatActivity {
 
     //boolean that checks if the user is in a dialog.
     boolean isWorkingOut = false;
+    int reps = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +167,30 @@ public class SelectedWorkout extends AppCompatActivity {
             tv.setPadding(20, 30, 5, 10);
             tv.setId(i);
 
+            TextView tempWeight = new TextView(this);
+
+            String sTemp = "";
+
+            //setting a String that will represent the change the users has made to the weight.
+            //if the starting action and the previous action is the same we will assume that the user has made no difference in weight and we will not print the previous weight.
+            if(mServer.getStartWeight(id, i) == mServer.getCurrentPreviousWeight(id, i)) {
+                sTemp = String.valueOf(mServer.getStartWeight(id, i));
+            }
+            //else they are not the same so we will print of both values.
+            else {
+                sTemp = mServer.getStartWeight(id, i) + " -> " + mServer.getCurrentPreviousWeight(id, i);
+            }
+
+            tempWeight.setText(sTemp);
+            //tv.setText("chuck");
+            tempWeight.setTextSize(18.0f);
+            tempWeight.setTextColor(getResources().getColor(R.color.mainText));
+            //tv.setBackgroundColor(getResources().getColor(R.color.white));
+            tempWeight.setPadding(20, 30, 5, 10);
+            tempLayout.setId(i);
+
+            weightArray.add(tempWeight);
+
             Button start = new Button(this);
             //LinearLayout.LayoutParams params = start.getLayoutParams();
             LayoutParams params = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -186,6 +213,7 @@ public class SelectedWorkout extends AppCompatActivity {
             startArray.add(start);
 
             tempLayout.addView(excerciseArray.get(i));
+            tempLayout.addView(weightArray.get(i));
             tempLayout.addView(startArray.get(i));
 
         }
@@ -197,12 +225,15 @@ public class SelectedWorkout extends AppCompatActivity {
 
                     setCounter = 0;
 
+                    //the integer that counts the number of reps for the current escersise, this will be used to calculate the rest time.
+                    //int reps = 0;
+
                     System.out.println(startArray.get(view.getId()));
                     //mServer.setWorkouts(view.getId());
 
 
                     //the user has clicked on an excercise therefore we can assume that they have started.
-                    isWorkingOut = true;
+                    //isWorkingOut = true;
 
                     //overlay.setVisibility(View.VISIBLE);
                     //layout.setVisibility(View.INVISIBLE);
@@ -223,6 +254,26 @@ public class SelectedWorkout extends AppCompatActivity {
                     nextSet = (Button)custom.findViewById(R.id.NextSet);
                     finished = (Button)custom.findViewById(R.id.Finished);
                     counter = (TextView)custom.findViewById(R.id.CurrentSet);
+                    start = (Button)custom.findViewById(R.id.StartExcercise);
+                    newReps = (EditText) custom.findViewById(R.id.newReps);
+                    newWeight = (EditText) custom.findViewById(R.id.newWeight);
+                    weightText = (TextView) custom.findViewById(R.id.weightText);
+                    repsText = (TextView) custom.findViewById(R.id.repsText);
+
+                    //the weight of this excercise
+                    int currentWeight = mServer.getCurrentPreviousWeight(mServer.getSelectedWorkoutID(), selectedExcercise);
+
+                    //getting the weight of the current excercise.
+                    String newWeightText = String.valueOf(currentWeight);
+
+                    //setting the value of newWeight to be the previous weight entered by the user.
+                    newWeight.setText(newWeightText);
+
+                    //new rep text
+                    String newRepText = String.valueOf(reps);
+
+                    //setting the reps text to be whatever number of reps was typed last.
+                    newReps.setText(newRepText);
 
                     //setting the current excercise to be the excercise that we have chosen.
                     currentExcercise.setText(excercises.get(mServer.getSelectedWorkoutID()).get(selectedExcercise) + "test");
@@ -234,6 +285,65 @@ public class SelectedWorkout extends AppCompatActivity {
 
                     //setting the time to be the minutes and seconds variables.
                     time.setText("Elapsed time: " + minutes + ":" + seconds);
+
+                    /*
+                    //on click for the 2 editTexts so we can delete the default message.
+                    newWeight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            newWeight.setText("");
+                        }
+                    });
+
+                    newReps.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            newReps.setText("");
+                        }
+                    });
+                    */
+
+                    //when the start button is pressed we want the timer to start.
+                    start.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            isWorkingOut = true;
+
+                            //getting what was typed in newWeights, and newReps.
+                            String sNewReps = newReps.getText().toString();
+                            String sNewWeight = newWeight.getText().toString();
+
+                            //checking if the 2 inputs newReps and newWeights are empty.
+                            if(!sNewReps.isEmpty() && !sNewWeight.isEmpty()) {
+                                //converting the 2 strings to ints
+                                int iNewReps = Integer.parseInt(sNewReps);
+                                int iNewWeight = Integer.parseInt(sNewWeight);
+
+                                //checking if what they have entered is valid
+                                if(iNewReps > 0 && iNewWeight > 0) {
+                                    //resetting the text in the 2 edit texts for next time they are visible.
+                                    //newReps.setText("Reps:");
+                                    //newWeight.setText("Weight:");
+
+                                    //setting the new previous weight to be the new weight entered by the user.
+                                    mServer.setPreviousExcerciseWeight(mServer.getSelectedWorkoutID(), selectedExcercise, iNewWeight);
+
+                                    //setting the reps to be what was in the newReps edit text.
+                                    reps = iNewReps;
+
+
+                                    counter.setVisibility(View.VISIBLE);
+                                    time.setVisibility(View.VISIBLE);
+                                    nextSet.setVisibility(View.VISIBLE);
+                                    finished.setVisibility(View.VISIBLE);
+                                    start.setVisibility(View.INVISIBLE);
+                                    newWeight.setVisibility(View.INVISIBLE);
+                                    newReps.setVisibility(View.INVISIBLE);
+                                }
+                            }
+
+                        }
+                    });
 
                     //when the nextset button has been pressed.
                     nextSet.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +374,7 @@ public class SelectedWorkout extends AppCompatActivity {
                             int id = mServer.getSelectedWorkoutID();
 
                             //the value of the selectedExcercise text before the finished button has been pressed.
-                            String excerciseValue = excercises.get(id).get(selectedExcercise).toString();
+                            String excerciseValue = excercises.get(mServer.getSelectedWorkoutID()).get(selectedExcercise).toString();
                             excerciseValue += "\n" + setCounter + " sets have been completed.";
 
                             excerciseArray.get(selectedExcercise).setText(excerciseValue);
@@ -318,7 +428,7 @@ public class SelectedWorkout extends AppCompatActivity {
         tv.setTextSize(18.0f);
         tv.setTextColor(getResources().getColor(R.color.mainText));
         //tv.setBackgroundColor(getResources().getColor(R.color.white));
-        tv.setPadding(20, 30, 5, 10);
+        tv.setPadding(20, 5, 5, 5);
 
         //getting the layout from the ID given and adding the textview to this.
         layouts.get(layoutID).addView(tv);

@@ -40,8 +40,13 @@ public class Workouts extends Service {
     //arraylist for the weights of the excercieses in the workouts which is being created by the yusers.
     ArrayList<Integer> currWeights = new ArrayList<>();
 
+    ArrayList<Integer> currPreviousWeights = new ArrayList<>();
+
     //the workout which was selected in the ViewWorkouts activity.
     int selectedWorkout = 0;
+
+    //creating a duplicate of the weights array list so we can make this the previous weights.
+    ArrayList<ArrayList<Integer>> previousExcerciseWeight = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -57,8 +62,9 @@ public class Workouts extends Service {
             for (int i = 0; i < workouts.size(); i = i + 1) {
                 //a string which will be what the excersise array for each workout was called (workoutname + Excercises.)
                 String sExcercises = workouts.get(i) + "Excercises";
-                String sWeights = workouts.get(i) + "Weights";
+                String sWeights = workouts.get(i) + "Weight";
                 String sBodyWeight = workouts.get(i) + "BodyWeight";
+                String sPreviousWeights = workouts.get(i) + "PreviousWeight";
                 System.out.println(sExcercises + " " + sWeights + " " + sBodyWeight);
                 System.out.println("Workout: " + workouts.get(i));
                 //if the excercises DB exists then we will add it to the arraylist of arraylists for excercises.
@@ -66,10 +72,18 @@ public class Workouts extends Service {
                     excercises.add(tinyDB.getListString(sExcercises));
                 }
 
+
                 //doing the same for body weights and weights.
                 if(tinyDB.getListInt(sWeights).size() != 0) {
                     excerciseWeight.add(tinyDB.getListInt(sWeights));
                 }
+
+
+
+                if(tinyDB.getListInt(sPreviousWeights).size() != 0) {
+                    previousExcerciseWeight.add(tinyDB.getListInt(sPreviousWeights));
+                }
+
 
                 if(tinyDB.getListBoolean(sBodyWeight).size() != 0) {
                     isBodyWeight.add(tinyDB.getListBoolean(sBodyWeight));
@@ -121,6 +135,7 @@ public class Workouts extends Service {
         //adding to the isBodyWeight array.
         currIsBodyWeight.add(weighted);
 
+
         //setting up a tinyDB.
         Context context = Workouts.this.getApplicationContext();
         TinyDB tinyDB = new TinyDB(context);
@@ -132,17 +147,21 @@ public class Workouts extends Service {
     public void addWeight(int uWeight) {
         //String for the current workouts excercies so we can save it to a dynamic tinyDB.
         String workout = currWorkout + "Weight";
+        String previousWorkout = currWorkout + "PreviousWeight";
         System.out.println(workout);
 
         //adding to the isBodyWeight array.
         currWeights.add(uWeight);
+        currPreviousWeights.add(uWeight);
 
         //setting up a tinyDB.
         Context context = Workouts.this.getApplicationContext();
         TinyDB tinyDB = new TinyDB(context);
 
         //adding the currentExcercises
-        tinyDB.putListString(workout, currExcercises);
+        tinyDB.putListInt(workout, currWeights);
+        tinyDB.putListInt(previousWorkout, currPreviousWeights);
+
     }
 
 
@@ -160,6 +179,7 @@ public class Workouts extends Service {
         currExcercises.clear();
         currIsBodyWeight.clear();
         currWeights.clear();
+        currPreviousWeights.clear();
     }
 
     //getter for the workouts.
@@ -187,6 +207,25 @@ public class Workouts extends Service {
         selectedWorkout = workoutID;
     }
 
+    //setting a new previous weight e.g. if the previous weight was the starting weight and we call this, then the previous weight will no longer be this.
+    public void setPreviousExcerciseWeight(int workoutID, int excerciseID, int newWeight) {
+        String tempName = workouts.get(workoutID) + "PreviousWeight";
+
+        System.out.println(tempName);
+        System.out.println("The array is: " + previousExcerciseWeight.get(workoutID));
+
+        //setting the previous weight to be what was given to the method.
+        previousExcerciseWeight.get(workoutID).set(excerciseID, newWeight);
+        //updating the previous weight tiny DB.
+        //setting up a tinyDB.
+        Context context = Workouts.this.getApplicationContext();
+        TinyDB tinyDB = new TinyDB(context);
+
+        //adding the currentExcercises
+        tinyDB.putListInt(tempName, previousExcerciseWeight.get(workoutID));
+    }
+
+
     //getter for the selected workout.
     public String getSelectedWorkout() {
         return workouts.get(selectedWorkout);
@@ -198,7 +237,15 @@ public class Workouts extends Service {
         return selectedWorkout;
     }
 
+    //getting the current previous weight of the selected excercise
+    public int getCurrentPreviousWeight(int workoutID, int excersiseID) {
+        return previousExcerciseWeight.get(workoutID).get(excersiseID);
+    }
 
+    //getter for the starting weight
+    public int getStartWeight(int workoutID, int excerciseID) {
+        return excerciseWeight.get(workoutID).get(excerciseID);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {

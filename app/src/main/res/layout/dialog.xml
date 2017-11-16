@@ -9,19 +9,17 @@
     >
 
 
-
     <TextView
+        android:id="@+id/currentExcercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/currentExcercise"
-        android:textColor="@color/white"
-        android:textSize="18dp"
-        android:textAlignment="center"
-        android:text="Excercise name"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:paddingTop="20dp">
-    </TextView>
+        android:paddingTop="20dp"
+        android:text="Excercise name"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18dp"></TextView>
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,6 +30,7 @@
         android:textAlignment="center"
         android:text="Current Set: "
         android:layout_below="@id/currentExcercise"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"
         android:paddingBottom="5dp"
         android:paddingTop="5dp">
@@ -50,11 +49,22 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="18dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:visibility="invisible">
 
     </TextView>
 
 
+    <Button
+        android:id="@+id/StartExcercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Finished"
+        android:layout_centerHorizontal="true"
+        android:background="@color/green"
+        android:gravity="center"
+        android:text="Start"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/NextSet"
@@ -65,7 +75,8 @@
         android:layout_alignRight="@+id/Time"
         android:background="@color/green"
         android:textColor="@color/white"
-        android:text="Next Set" />
+        android:text="Next Set"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/Finished"
@@ -75,6 +86,48 @@
         android:layout_below="@+id/Time"
         android:background="@color/green"
         android:textColor="@color/white"
-        android:text="Finished" />
+        android:text="Finished"
+        android:visibility="invisible"/>
+
+    <EditText
+        android:id="@+id/newReps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/Finished"
+        android:layout_below="@+id/repsText"
+        android:ems="10"
+        android:maxLength="3"
+        android:inputType="number"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/newWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weightText"
+        android:layout_centerHorizontal="true"
+        android:maxLength="3"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/weightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/currentExcercise"
+        android:layout_centerHorizontal="true"
+        android:text="Weight"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/repsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newWeight"
+        android:layout_centerHorizontal="true"
+        android:text="Reps"
+        android:textColor="@color/white" />
+
 
 </RelativeLayout>
