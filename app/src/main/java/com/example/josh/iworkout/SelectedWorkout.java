@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
@@ -84,6 +85,12 @@ public class SelectedWorkout extends AppCompatActivity {
     //boolean that checks if the user is in a dialog.
     boolean isWorkingOut = false;
     int reps = 0;
+
+    //the default
+    int rest = 60000;
+
+    //the base resting time is 1.0f.
+    double baseRest = 1.0;
 
 
     @Override
@@ -309,6 +316,11 @@ public class SelectedWorkout extends AppCompatActivity {
                         public void onClick(View view) {
                             isWorkingOut = true;
 
+                            //resetting rest back to a minute to ensure that we recalculate each time from a minute.
+                            rest = 60000;
+
+                            baseRest = 1.0f;
+
                             //getting what was typed in newWeights, and newReps.
                             String sNewReps = newReps.getText().toString();
                             String sNewWeight = newWeight.getText().toString();
@@ -328,8 +340,39 @@ public class SelectedWorkout extends AppCompatActivity {
                                     //setting the new previous weight to be the new weight entered by the user.
                                     mServer.setPreviousExcerciseWeight(mServer.getSelectedWorkoutID(), selectedExcercise, iNewWeight);
 
+                                    //calculating the time that should be added due to the reps.
+                                    double repsChangeRate = iNewReps / 10.0;
+
+                                    //checking if newReps is more than or less than 10
+                                    if (iNewReps > 10) {
+                                        baseRest = baseRest + repsChangeRate;
+                                    } else if(iNewReps < 10) {
+                                        baseRest = baseRest - repsChangeRate;
+                                    }
+                                    //else we are at 10 so add/subtract nothing
+                                    else {
+                                        baseRest = baseRest + 0.0;
+                                    }
+
+
                                     //setting the reps to be what was in the newReps edit text.
                                     reps = iNewReps;
+
+
+                                    //calculating if the new weight is an increase or a decrease.
+                                    //if the new weight is more then it's an icnrease.
+                                    if(iNewWeight > mServer.getStartWeight(mServer.getSelectedWorkoutID(), selectedExcercise)) {
+                                        //getting the percent increase.
+                                        double percentIncreaseWeight = (double)iNewWeight / (double)mServer.getStartWeight(mServer.getSelectedWorkoutID(), selectedExcercise);
+                                        baseRest = baseRest + percentIncreaseWeight;
+
+                                    } else {
+                                        //the percent decrease in weight.
+                                        double percentDecreaseWeight = iNewWeight / (double)mServer.getStartWeight(mServer.getSelectedWorkoutID(), selectedExcercise);
+                                        //adding this to the base rate for the rest time
+                                        baseRest = baseRest - percentDecreaseWeight;
+                                    }
+
 
 
                                     counter.setVisibility(View.VISIBLE);
@@ -339,6 +382,8 @@ public class SelectedWorkout extends AppCompatActivity {
                                     start.setVisibility(View.INVISIBLE);
                                     newWeight.setVisibility(View.INVISIBLE);
                                     newReps.setVisibility(View.INVISIBLE);
+                                    weightText.setVisibility(View.INVISIBLE);
+                                    repsText.setVisibility(View.INVISIBLE);
                                 }
                             }
 
@@ -362,6 +407,46 @@ public class SelectedWorkout extends AppCompatActivity {
                             //resetting the minutes and seconds.
                             seconds = 0;
                             minutes = 0;
+
+                            //making everything that's not the time remaining invisible.
+                            counter.setVisibility(View.INVISIBLE);
+                            nextSet.setVisibility(View.INVISIBLE);
+                            finished.setVisibility(View.INVISIBLE);
+
+                            //stop working out as a timer is about to show.
+                            isWorkingOut = false;
+
+                            System.out.println("baserest: " + baseRest);
+
+                            //a temporary float which will multiply rest by the baseRest.
+                            double tempRest = 60000.0 * baseRest;
+
+                            //calculating the time we must rest based on the value of based rest
+                            rest = (int) Math.round(tempRest);
+
+                            System.out.println("rest: " + tempRest);
+
+
+
+                            //starting a counter which will determine when the editTexts and the start button will become visible again.
+                            new CountDownTimer(rest, 1000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    System.out.println("seconds remaining: " + millisUntilFinished / 1000);
+                                    time.setText("Rest time remaining: " + millisUntilFinished / 1000);
+                                }
+
+                                public void onFinish() {
+                                    System.out.println("done!");
+                                    //when the timers finished we want to set the start button and the edit texts back to true.
+                                    newWeight.setVisibility(View.VISIBLE);
+                                    newReps.setVisibility(View.VISIBLE);
+                                    weightText.setVisibility(View.VISIBLE);
+                                    repsText.setVisibility(View.VISIBLE);
+                                    time.setVisibility(View.INVISIBLE);
+                                    start.setVisibility(View.VISIBLE);
+                                }
+                            }.start();
                         }
 
                     });
