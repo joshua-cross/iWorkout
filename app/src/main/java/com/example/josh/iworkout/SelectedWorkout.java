@@ -15,9 +15,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SelectedWorkout extends AppCompatActivity {
@@ -55,6 +58,12 @@ public class SelectedWorkout extends AppCompatActivity {
 
     //the ID of the selected excercise.
     int selectedExcercise = 0;
+
+    //the button which will create the superset.
+    Button superset;
+
+    //the button that determines when the user has finished creating there superset.
+    Button createSuperset;
 
     //the Finished and the next set buttons
     //Button nextSet;
@@ -92,6 +101,16 @@ public class SelectedWorkout extends AppCompatActivity {
     //the base resting time is 1.0f.
     double baseRest = 1.0;
 
+    //when the create superset button is clicked.
+    boolean isSelectingSuperset = false;
+
+
+    //an array list for the current superset; it will hold the id's of the selected linear arrays so we know which excercises to delete and add as a superset.
+    ArrayList<Integer> currSuperSet = new ArrayList<>();
+
+    //an arraylist that holds all the supersets.
+    ArrayList<ArrayList<Integer>> supersets = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,15 +122,134 @@ public class SelectedWorkout extends AppCompatActivity {
         app_bar.setDisplayShowTitleEnabled(false);
 
         workout = (TextView) findViewById(R.id.WorkoutName);
+        superset = (Button) findViewById(R.id.createSuperset);
+
+        createSuperset = (Button) findViewById(R.id.finishedSuperset);
 
         //starting the counter, however this will only be ran when an excersise is chosen
         secondCounter();
 
         //overlay = (ConstraintLayout) findViewById(R.id.overlay);
+        final Context context = this;
+
+        superset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //System.out.println("Hmmm");
+                isSelectingSuperset = true;
+            }
+        });
+
+        createSuperset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
 
+                //the layout for the activity.
+                final LinearLayout layout = (LinearLayout) findViewById(R.id.excerciseLayout);
 
-        //when the finished button has been pressed.
+                //adding the previous created superset to the supersets ArrayList.
+                supersets.add(currSuperSet);
+
+                String excerciseText = "";
+                ArrayList<String> weightText = new ArrayList<>();
+
+                int id = mServer.getSelectedWorkoutID();
+
+
+                //temporary string that holds the weight of the specific excercise.
+                String tempWeight;
+
+                //going through the currently selected excercises in the superset.
+                for (int i = 0; i < currSuperSet.size(); i = i + 1) {
+                    //removing the selected layouts from the activity.
+                    layout.removeView(layouts.get(currSuperSet.get(i)));
+                    if(i == 0) {
+                        excerciseText += excercises.get(id).get(currSuperSet.get(i));
+                    } else {
+                        excerciseText += ", " + excercises.get(id).get(currSuperSet.get(i));
+                    }
+
+                    //setting the weight to be the excercise followed by the weights.
+                    tempWeight = excercises.get(id).get(currSuperSet.get(i)) + "weights: " +
+                            mServer.getStartWeight(id, currSuperSet.get(i)) + " -> " +
+                            mServer.getCurrentPreviousWeight(id, currSuperSet.get(i));
+
+                    //adding the temp string to the weightText arraylist
+                    weightText.add(tempWeight);
+
+                }
+
+                //adding a new layout with the new text to the screen.
+                LinearLayout tempLayout = new LinearLayout(context);
+                tempLayout.setBackgroundColor(getResources().getColor(R.color.white));
+                LayoutParams layoutParams = new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.bottomMargin = 30;
+                layoutParams.leftMargin = 10;
+                layoutParams.rightMargin = 10;
+                tempLayout.setOrientation(LinearLayout.VERTICAL);
+                tempLayout.setLayoutParams(layoutParams);
+                layout.addView(tempLayout);
+
+                //layouts.add(tempLayout);
+
+
+                TextView tv = new TextView(context);
+                tv.setText(excerciseText);
+                //tv.setText("chuck");
+                tv.setTextSize(18.0f);
+                tv.setTextColor(getResources().getColor(R.color.mainText));
+                //tv.setBackgroundColor(getResources().getColor(R.color.white));
+                tv.setPadding(20, 30, 5, 10);
+                tv.setId(excerciseArray.size() + 1);
+
+                tempLayout.addView(tv);
+                //TextView tempWeight = new TextView(this);
+
+                for(int i = 0; i < weightText.size(); i = i + 1) {
+                    TextView tvWeight = new TextView(context);
+                    tvWeight.setText(weightText.get(i));
+                    //tv.setText("chuck");
+                    tvWeight.setTextSize(18.0f);
+                    tvWeight.setTextColor(getResources().getColor(R.color.mainText));
+                    //tv.setBackgroundColor(getResources().getColor(R.color.white));
+                    tvWeight.setPadding(20, 30, 5, 10);
+                    tvWeight.setId(excerciseArray.size() + 1);
+
+                    tempLayout.addView(tvWeight);
+                }
+
+                Button start = new Button(context);
+                //LinearLayout.LayoutParams params = start.getLayoutParams();
+                LayoutParams params = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                //start.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                //params.addRule(LinearLayout.ALIGN_PARENT_RIGHT);
+                //params.leftMargin = 700;
+                params.topMargin = 10;
+                params.bottomMargin = 30;
+                start.setLayoutParams(params);
+                //params.addRule(LinearLayout.ALIGN_PARENT_RIGHT);
+                start.setText("Start");
+                start.setTextSize(16.0f);
+                start.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                start.setBackgroundColor(getResources().getColor(R.color.green));
+                start.setTextColor(getResources().getColor(R.color.white));
+                start.setId(excerciseArray.size() + 1);
+                //start.setPadding(100, 0, 5, 10);
+
+                startArray.add(start);
+
+                tempLayout.addView(start);
+
+                //clearing the weight array.
+                weightText.clear();
+
+                //clearing the current superset
+                currSuperSet.clear();
+
+            }
+        });
+
     }
 
     /*
@@ -226,6 +364,35 @@ public class SelectedWorkout extends AppCompatActivity {
         }
 
         for (int i = 0; i < startArray.size(); i = i + 1) {
+
+            layouts.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //only going to do the following if the user has indicated that they want to create a superset.
+                    if(isSelectingSuperset) {
+
+                        //When a layout is clicked we will change the colour from white to red to inform the user that they have selected a excercise.
+                        final int tempSelected = view.getId();
+                        ValueAnimator anim = new ValueAnimator();
+                        anim.setIntValues(getResources().getColor(R.color.white), getResources().getColor(R.color.red));
+                        anim.setEvaluator(new ArgbEvaluator());
+                        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                layouts.get(tempSelected).setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+                            }
+                        });
+
+                        anim.setDuration(1000);
+                        anim.start();
+
+                        //adding the selected ID to the superset actionarray
+                        currSuperSet.add(view.getId());
+                    }
+
+                }
+            });
             startArray.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -28,8 +28,8 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="70dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="71dp">
+        tools:layout_editor_absoluteX="156dp"
+        tools:layout_editor_absoluteY="43dp">
 
 
         <LinearLayout
@@ -37,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
 
             <TextView
                 android:id="@+id/WorkoutName"
@@ -47,6 +48,32 @@
                 android:textAlignment="center"
                 android:textColor="@color/mainText"
                 android:textSize="20dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/finishedSuperset"
+                    android:layout_width="121dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@color/green"
+                    android:text="Done"
+                    android:textColor="@color/white" />
+
+
+                <Button
+                    android:id="@+id/createSuperset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@color/green"
+                    android:text="Create Superset"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
